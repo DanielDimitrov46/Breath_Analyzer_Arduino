@@ -92,8 +92,8 @@ void loop() {
     sensor_volt = (float)sensorValue / 1024 * 5.0;
     RS_gas = ((5.0 * R2) / sensor_volt) - R2;
     /*-Replace the value of R0 with the value of R0 in your test -*/
-    // R0 = 72.69;
-    R0 = 36.23;
+    // R0 = 73.63;
+    R0 = 30.23;
     ratio = RS_gas / R0;  // ratio = RS/R0
     double x = 0.4 * ratio;
     BAC = pow(x, -1.431);  //BAC in mg/L
