@@ -34,7 +34,7 @@ float ratio;
 float BAC;
 int R2 = 1.02;
 
-
+// set sensor to warm up and show it on display - remember to change the delay to higher
 void setup() {
   Serial.begin(9600);
   display.begin(SH1106_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3D (for the 128x64)
@@ -51,6 +51,7 @@ void setup() {
   pinMode(BUTTON_PIN, INPUT_PULLUP);
 }
 
+// code for start meausoring
 byte buttonState;
 bool realTesting() {
 buttonState = digitalRead(BUTTON_PIN);
@@ -63,6 +64,8 @@ buttonState = digitalRead(BUTTON_PIN);
   }
   delay(100);
 }
+
+// function for showing the message while measure.
 
 void loop() {
    display.clearDisplay();
@@ -116,5 +119,4 @@ void loop() {
   } else {
     Serial.print("Nothing");
   }
-  // realTesting();
 }

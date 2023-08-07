@@ -61,21 +61,21 @@ void loop()
   Serial.print("BAC: ");
   Serial.println(BAC,3);
 
-  display.clearDisplay();
-  display.setTextSize(2);
-  display.setTextColor(WHITE);
-  display.setCursor(0,25);
-  display.print("PPM ");
-  display.println(concentration,0);
-  display.display();
+  // display.clearDisplay();
+  // display.setTextSize(2);
+  // display.setTextColor(WHITE);
+  // display.setCursor(0,25);
+  // display.print("PPM ");
+  // display.println(concentration,0);
+  // display.display();
   
-  /*display.clearDisplay();
+  display.clearDisplay();
   display.setTextSize(2);
   display.setTextColor(WHITE);
   display.setCursor(0,25);
   display.print("BEC ");
   display.println(BAC,4);
-  display.display();*/
+  display.display();
   
 }
 
