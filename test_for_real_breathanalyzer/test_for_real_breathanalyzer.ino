@@ -96,6 +96,7 @@ void loop() {
     RS_gas = ((5.0 * R2) / sensor_volt) - R2;
     /*-Replace the value of R0 with the value of R0 in your test -*/
     // R0 = 73.63;
+    // R0 = 110.34;
     R0 = 30.23;
     ratio = RS_gas / R0;  // ratio = RS/R0
     double x = 0.4 * ratio;
