@@ -85,7 +85,6 @@ float measureBAC() {
   display.setCursor(0, 32);
   display.print("BAC = ");
   BAC = BAC * 0.0001;
-  Serial.println(BAC);
   display.print(BAC);
   display.print(" g/DL\n\n");
   display.println(sensorValue);
@@ -119,7 +118,8 @@ void loop() {
   display.setTextSize(1.5);
   display.setTextColor(WHITE);
   display.setCursor(0, 32);
-  display.print("Press the button to start measuring! ");
+  display.println("Press the button to");
+  display.println("start measuring!");
   display.display();
 
   if (isButtonPressed() && !measuringInProgress && !measurementCompleted) {
