@@ -90,7 +90,7 @@ void loop() {
       display.clearDisplay();
 
 
-    int sensorValue = analogRead(A0);
+    int sensorValue = analogRead(A1);
     Serial.println(sensorValue);
     sensor_volt = (float)sensorValue / 1024 * 5.0;
     RS_gas = ((5.0 * R2) / sensor_volt) - R2;

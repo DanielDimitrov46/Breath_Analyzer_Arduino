@@ -71,8 +71,8 @@ float measureBAC() {
   RS_gas = ((5.0 * R2) / sensor_volt) - R2;
   /*-Replace the value of R0 with the value of R0 in your test -*/
   // R0 = 73.63;
-  R0 = 30.23;
-  // R0 = 55.34;
+  R0 = 34.23;
+  // R0 = 60.34;
   ratio = RS_gas / R0;  // ratio = RS/R0
   double x = 0.4 * ratio;
   BAC = pow(x, -1.431);  //BAC in mg/L
