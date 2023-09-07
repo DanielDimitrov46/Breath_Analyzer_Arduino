@@ -1,11 +1,9 @@
-//REAL CODE
-
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SH1106.h>
 
-//define ports and display for further use
+//define ports and display
 #define SCREEN_WIDTH 128  
 #define SCREEN_HEIGHT 64
 #define OLED_RESET 4
@@ -14,16 +12,16 @@
 #define BUZZER_PIN 8  
 
 Adafruit_SH1106 display(OLED_RESET);
-// SoftwareSerial arduinoSerial(3, 2);
+// SoftwareSerial nodemcu(5, 6);
 float sensor_volt;
 float RS_gas;
 float R0;
 float ratio;
 float BAC;
-int R2 = 1.02;
+float R2 = 1.02;
 
+// int R2 = 1.02;
 const unsigned long MEASURING_DURATION = 5000;  // Measuring duration in milliseconds (5 seconds)
-// const unsigned long ONE_MINUTE = 60000;         // One minute in milliseconds
 bool measuringInProgress = false;               // Flag to track if measuring is in progress
 bool measurementCompleted = false;              // Flag to track if measurement is completed
 unsigned long measuringStartTime;
@@ -41,17 +39,17 @@ void setupDisplay() {
   display.begin(SH1106_SWITCHCAPVCC, 0x3C);
   display.clearDisplay();
   display.setTextSize(1.5);
-  display.setTextColor(WHITE);
   display.setCursor(0, 32);
+  display.setTextColor(WHITE);
   display.println("MQ3 warming up!");
   display.display();
-  delay(2000); // da se opravi za realnata rabota
+  delay(6000); 
   display.clearDisplay();
 }
 
 void batteryLevel() {
-  int rawValue = analogRead(batteryPin);      // Четене на стойността от аналоговия пин
-  float voltage = (rawValue / 1023.0) * 5.0;  // Преобразуване на стойността в напрежение (при 5V референтно напрежение)
+  int rawValue = analogRead(batteryPin);
+  float voltage = (rawValue / 1023.0) * 5.0; 
 
   // Пресмятане на процентите на батерията
   float batteryPercentage = ((voltage - ratedVoltage) / (chargingLimitVoltage - ratedVoltage)) * 100.0;
@@ -61,7 +59,7 @@ void batteryLevel() {
   }
   display.clearDisplay();
   display.setTextSize(1.5);
-  display.setCursor(5, 32);
+  display.setCursor(0, 32);
   display.println("Battery:");
   display.print(batteryPercentage);
   display.println("%");
@@ -80,7 +78,7 @@ bool isButtonPressed2() {
   return (digitalRead(BUTTON_PIN2) == LOW);
 }
 
-// Function to perform the actual measurement and calculate BAC
+// Function to perform the actual measurement
 float measureBAC() {
   int sensorValue;
   unsigned long elapsedTime;
@@ -99,13 +97,12 @@ float measureBAC() {
   }
   noTone(BUZZER_PIN);
 
-  // Calculate the BAC after 5 seconds of measuring
+  
   sensorValue = analogRead(A1);
   Serial.println(sensorValue);
   sensor_volt = (float)sensorValue / 1024 * 5.0;
   RS_gas = ((5.0 * R2) / sensor_volt) - R2;
-  /*-Replace the value of R0 with the value of R0 in your test -*/
-  // R0 = 73.63;
+  // R0 = 0.15;
   R0 = 38.23;
   // R0 = 96.87;
   ratio = RS_gas / R0;  // ratio = RS/R0
@@ -132,32 +129,35 @@ float measureBAC() {
 
 void setup() {
   Serial.begin(9600);
+  // nodemcu.begin(9600);
   pinMode(BUTTON_PIN, INPUT_PULLUP);
   pinMode(BUTTON_PIN2, INPUT_PULLUP);
-  pinMode(BUZZER_PIN, OUTPUT);  // Set the buzzer pin as an output
+  pinMode(BUZZER_PIN, OUTPUT);  
   tone(BUZZER_PIN, 1000, 2000);
 
 
   setupDisplay();
 }
 
-// void playBuzzerSound(unsigned int frequency, unsigned long duration) {
-//   tone(BUZZER_PIN, frequency, duration);
-//   delay(duration);
-//   noTone(BUZZER_PIN);
-// }
-
 const float BAC_TOLERANCE = 0.01;
 bool displayingBattery = false;
 void loop() {
+  //For UART communication
+  // sensorValue = analogRead(A1);
+  // StaticJsonBuffer<1000> jsonBuffer;
+  // JsonObject& data = jsonBuffer.createObject();
+  // data["sensorValue"] = sensorValue;
+
   // Display the initial message
   display.clearDisplay();
   display.setTextSize(1.5);
-  display.setTextColor(WHITE);
   display.setCursor(0, 32);
-  display.println("Press the button to");
+  display.setTextColor(WHITE);
+  display.println("Press the right");
+  display.println("button to");
   display.println("start measuring!");
   display.display();
+
   if (isButtonPressed1() && !measuringInProgress && !measurementCompleted) {
     // Set the measuring flag to true to start measuring
     measuringInProgress = true;
@@ -165,7 +165,6 @@ void loop() {
     delay(1000);                    // Wait for 1 second to avoid accidental double-clicks
 
     // Show "Measuring..." message for 5 seconds and perform the actual measurement
-    // playBuzzerSound(3000, MEASURING_DURATION);
     float forDelay; // opravi promenlivata
     forDelay = measureBAC();
     Serial.println(forDelay);
@@ -196,9 +195,33 @@ void loop() {
     measuringInProgress = false;
     measurementCompleted = false;
   }
+  //Send data to NodeMCU
+  // data.printTo(nodemcu);
+  // jsonBuffer.clear();
 }
 
 
+
+// for R0
+// float sensor_volt;
+// float RS_gas;
+// float R0;
+// // int R2 = 1000;
+// float R2 = 1.02;//не е проверено
+
+// void setup() {
+//  Serial.begin(9600);
+// }
+
+// void loop() {
+//   int sensorValue = analogRead(A1);
+//   sensor_volt=(float)sensorValue/1024*5.0;
+//   RS_gas = ((5.0 * R2)/sensor_volt) - R2;
+//   R0 = RS_gas / 60;
+//   Serial.print("R0: ");
+//   Serial.println(R0);
+
+// }
 
 //FOR BUZZERS
 
